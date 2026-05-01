@@ -2,6 +2,15 @@
 
 use serde::{Deserialize, Serialize};
 
+#[cfg(feature = "leptos")]
+mod emitter;
+
+#[cfg(feature = "leptos")]
+pub use emitter::{WebLoggerConfig, init_web_logging, init_web_logging_with_config};
+
+/// Default endpoint path for browser-to-server log relay requests.
+pub const DEFAULT_WEB_LOG_RELAY_ENDPOINT: &str = "/_leptos/web-log";
+
 /// Stable JSON schema for a browser-to-server log relay payload.
 ///
 /// This type defines the shared on-wire contract between relay emitters and

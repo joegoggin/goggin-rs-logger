@@ -14,6 +14,10 @@ pub use log::{debug, error, info, trace, warn};
 #[cfg(feature = "axum")]
 pub use middleware::HttpLoggingConfig;
 pub use relay::RelayLogPayload;
+#[cfg(feature = "leptos")]
+pub use relay::{
+    DEFAULT_WEB_LOG_RELAY_ENDPOINT, WebLoggerConfig, init_web_logging, init_web_logging_with_config,
+};
 
 /// Logs an informational message using the semantic message target.
 ///
@@ -31,4 +35,20 @@ pub fn log_message(message: &str) {
 /// * `message` - The message text to emit.
 pub fn log_success(message: &str) {
     log::info!(target: backend::SUCCESS_TARGET, "{}", message);
+}
+
+#[cfg(all(test, feature = "leptos"))]
+mod leptos_public_api_tests {
+    use super::{
+        DEFAULT_WEB_LOG_RELAY_ENDPOINT, WebLoggerConfig, init_web_logging,
+        init_web_logging_with_config,
+    };
+
+    #[test]
+    fn leptos_public_api_is_exported_from_crate_root() {
+        let _: &'static str = DEFAULT_WEB_LOG_RELAY_ENDPOINT;
+        let _: fn(&'static str) -> Result<WebLoggerConfig, log::SetLoggerError> = init_web_logging;
+        let _: fn(WebLoggerConfig) -> Result<WebLoggerConfig, log::SetLoggerError> =
+            init_web_logging_with_config;
+    }
 }
