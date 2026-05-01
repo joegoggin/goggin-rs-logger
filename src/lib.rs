@@ -1,6 +1,8 @@
 mod backend;
 mod formatting;
 pub mod level;
+#[cfg(feature = "axum")]
+mod middleware;
 #[cfg(any(feature = "axum", test))]
 mod redaction;
 
@@ -8,6 +10,8 @@ pub use backend::Logger;
 pub use level::{is_off, level_for_logger, parse_level_filter};
 /// Convenience re-exports of the [`log`] facade macros.
 pub use log::{debug, error, info, trace, warn};
+#[cfg(feature = "axum")]
+pub use middleware::HttpLoggingConfig;
 
 /// Logs an informational message using the semantic message target.
 ///
