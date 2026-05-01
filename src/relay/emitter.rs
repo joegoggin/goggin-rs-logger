@@ -75,7 +75,7 @@ struct WebRelayLogger;
 static WEB_RELAY_LOGGER: WebRelayLogger = WebRelayLogger;
 
 thread_local! {
-    static RELAY_QUEUE: RefCell<VecDeque<RelayLogPayload>> = RefCell::new(VecDeque::new());
+    static RELAY_QUEUE: RefCell<VecDeque<RelayLogPayload>> = const { RefCell::new(VecDeque::new()) };
     static RELAY_SENDING: Cell<bool> = const { Cell::new(false) };
     static RELAY_ENDPOINT: Cell<&'static str> = const { Cell::new(DEFAULT_WEB_LOG_RELAY_ENDPOINT) };
 }
