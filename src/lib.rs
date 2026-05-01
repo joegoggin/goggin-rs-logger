@@ -5,6 +5,7 @@ pub mod level;
 mod middleware;
 #[cfg(any(feature = "axum", test))]
 mod redaction;
+pub mod relay;
 
 pub use backend::Logger;
 pub use level::{is_off, level_for_logger, parse_level_filter};
@@ -12,6 +13,7 @@ pub use level::{is_off, level_for_logger, parse_level_filter};
 pub use log::{debug, error, info, trace, warn};
 #[cfg(feature = "axum")]
 pub use middleware::HttpLoggingConfig;
+pub use relay::RelayLogPayload;
 
 /// Logs an informational message using the semantic message target.
 ///
