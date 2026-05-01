@@ -4,9 +4,16 @@ use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "leptos")]
 mod emitter;
+#[cfg(feature = "axum")]
+mod receiver;
 
 #[cfg(feature = "leptos")]
 pub use emitter::{WebLoggerConfig, init_web_logging, init_web_logging_with_config};
+#[cfg(feature = "axum")]
+pub use receiver::{
+    RelayLogSink, RelayReceiverState, format_relay_line, relay_log_handler, relay_router,
+    split_formatted_lines,
+};
 
 /// Default endpoint path for browser-to-server log relay requests.
 pub const DEFAULT_WEB_LOG_RELAY_ENDPOINT: &str = "/_leptos/web-log";
