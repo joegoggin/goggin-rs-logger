@@ -16,13 +16,13 @@
 //! # Native logger
 //!
 //! ```no_run
-//! use goggin_rs_logger::{Logger, log_message, log_success};
+//! use goggin_rs_logger::{Logger, info, log_message, log_success};
 //!
 //! fn main() {
 //!     Logger::setup_logging("info", false);
 //!
 //!     log_message("starting application");
-//!     log::info!("ready");
+//!     info!("ready");
 //!     log_success("startup complete");
 //! }
 //! ```

@@ -38,13 +38,13 @@ goggin-rs-logger = { git = "https://github.com/joegoggin/goggin-rs-logger", feat
 ## Native logger
 
 ```rust
-use goggin_rs_logger::{Logger, log_message, log_success};
+use goggin_rs_logger::{Logger, info, log_message, log_success};
 
 fn main() {
     Logger::setup_logging("info", false);
 
     log_message("hello from goggin-rs-logger");
-    log::info!("standard log facade message");
+    info!("standard log facade message");
     log_success("startup complete");
 }
 ```

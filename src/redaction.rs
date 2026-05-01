@@ -71,11 +71,22 @@ pub(super) fn is_sensitive_json_key(key: &str) -> bool {
             | "token"
             | "access_token"
             | "refresh_token"
+            | "authorization"
+            | "auth"
             | "auth_code"
+            | "jwt"
+            | "session"
+            | "session_id"
+            | "cookie"
+            | "set_cookie"
             | "secret"
             | "api_key"
     ) || key.contains("token")
+        || key.contains("authorization")
         || key.contains("secret")
+        || key.contains("session")
+        || key.contains("cookie")
+        || key.contains("jwt")
         || key.contains("password")
 }
 
@@ -114,6 +125,8 @@ pub(super) fn is_sensitive_header(name: &str) -> bool {
         "authorization" | "cookie" | "set-cookie" | "x-api-key" | "x-auth-token"
     ) || name.contains("token")
         || name.contains("secret")
+        || name.contains("session")
+        || name.contains("jwt")
 }
 
 #[cfg(test)]
@@ -143,6 +156,10 @@ mod tests {
     fn redact_json_masks_case_insensitive_and_substring_keys() {
         let mut value = json!({
             "Access_Token": "abc",
+            "Authorization": "Bearer abc",
+            "session_id": "session-1",
+            "cookie": "sid=session-1",
+            "jwt": "ey...",
             "dbPasswordHash": "hashed",
             "nested": {
                 "clientSecret": "top-secret",
@@ -161,6 +178,10 @@ mod tests {
         redact_json_value(&mut value);
 
         assert_eq!(value["Access_Token"], "(hidden)");
+        assert_eq!(value["Authorization"], "(hidden)");
+        assert_eq!(value["session_id"], "(hidden)");
+        assert_eq!(value["cookie"], "(hidden)");
+        assert_eq!(value["jwt"], "(hidden)");
         assert_eq!(value["dbPasswordHash"], "(hidden)");
         assert_eq!(value["nested"]["clientSecret"], "(hidden)");
         assert_eq!(value["nested"]["safe"], "visible");
@@ -175,6 +196,8 @@ mod tests {
             "(hidden)"
         );
         assert_eq!(sanitize_header_value("X-Auth-Token", "abc"), "(hidden)");
+        assert_eq!(sanitize_header_value("X-Session-Id", "abc"), "(hidden)");
+        assert_eq!(sanitize_header_value("X-JWT", "abc"), "(hidden)");
         assert_eq!(
             sanitize_header_value("X-Client-Secret-Key", "xyz"),
             "(hidden)"
