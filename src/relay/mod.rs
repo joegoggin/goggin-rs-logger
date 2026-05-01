@@ -1,4 +1,8 @@
 //! Shared browser-to-server log relay payloads.
+//!
+//! The relay contract uses [`RelayLogPayload`] as the JSON body posted by the
+//! browser emitter and accepted by the Axum receiver. Browser emitters post to
+//! [`DEFAULT_WEB_LOG_RELAY_ENDPOINT`] unless configured with a custom endpoint.
 
 use serde::{Deserialize, Serialize};
 
@@ -16,6 +20,9 @@ pub use receiver::{
 };
 
 /// Default endpoint path for browser-to-server log relay requests.
+///
+/// Browser emitters use this path unless `WebLoggerConfig::with_endpoint` is
+/// used to override it.
 pub const DEFAULT_WEB_LOG_RELAY_ENDPOINT: &str = "/_leptos/web-log";
 
 /// Stable JSON schema for a browser-to-server log relay payload.
@@ -23,6 +30,15 @@ pub const DEFAULT_WEB_LOG_RELAY_ENDPOINT: &str = "/_leptos/web-log";
 /// This type defines the shared on-wire contract between relay emitters and
 /// receivers. The endpoint path is intentionally not part of the schema so
 /// applications can choose or configure their own relay route.
+///
+/// # Fields
+///
+/// * `level` - Log level name such as `"error"`, `"warn"`, `"info"`,
+///   `"debug"`, or `"trace"`.
+/// * `message` - Rendered log message.
+/// * `target` - Optional log target or module path.
+/// * `file` - Optional source file path.
+/// * `line` - Optional source line number.
 #[derive(Serialize, Deserialize)]
 pub struct RelayLogPayload {
     /// Log level name, such as `"error"`, `"warn"`, `"info"`, `"debug"`, or `"trace"`.

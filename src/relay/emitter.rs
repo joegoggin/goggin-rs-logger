@@ -33,6 +33,16 @@ impl WebLoggerConfig {
     ///
     /// `WEB_LOG_LEVEL` takes precedence when it is set at compile time.
     /// Otherwise, `default_level` is used.
+    ///
+    /// # Arguments
+    ///
+    /// * `default_level` - Fallback level string used when `WEB_LOG_LEVEL` is
+    ///   not set.
+    ///
+    /// # Returns
+    ///
+    /// A [`WebLoggerConfig`] using the resolved level and the default relay
+    /// endpoint.
     pub fn new(default_level: &'static str) -> Self {
         let configured_level = option_env!("WEB_LOG_LEVEL").unwrap_or(default_level);
         let level_filter = parse_level_filter(configured_level);
@@ -45,6 +55,15 @@ impl WebLoggerConfig {
     }
 
     /// Returns this configuration with a custom relay endpoint.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Endpoint path used for browser-to-server relay requests.
+    ///
+    /// # Returns
+    ///
+    /// A [`WebLoggerConfig`] with the same level settings and the provided
+    /// endpoint.
     pub fn with_endpoint(self, endpoint: &'static str) -> Self {
         Self { endpoint, ..self }
     }
@@ -65,6 +84,19 @@ thread_local! {
 ///
 /// Resolves the log level from `WEB_LOG_LEVEL`, updates the max log level, and
 /// installs the relay logger when the level is not `off`.
+///
+/// # Arguments
+///
+/// * `default_level` - Fallback level string used when `WEB_LOG_LEVEL` is not
+///   set.
+///
+/// # Returns
+///
+/// The resolved [`WebLoggerConfig`] used to initialize browser logging.
+///
+/// # Errors
+///
+/// Returns [`SetLoggerError`] if another logger has already been installed.
 pub fn init_web_logging(default_level: &'static str) -> Result<WebLoggerConfig, SetLoggerError> {
     init_web_logging_with_config(WebLoggerConfig::new(default_level))
 }
@@ -73,6 +105,18 @@ pub fn init_web_logging(default_level: &'static str) -> Result<WebLoggerConfig, 
 ///
 /// Stores the configured endpoint before registering the logger so records
 /// emitted immediately after registration use the selected relay path.
+///
+/// # Arguments
+///
+/// * `config` - Resolved browser logger configuration.
+///
+/// # Returns
+///
+/// The [`WebLoggerConfig`] used to initialize browser logging.
+///
+/// # Errors
+///
+/// Returns [`SetLoggerError`] if another logger has already been installed.
 pub fn init_web_logging_with_config(
     config: WebLoggerConfig,
 ) -> Result<WebLoggerConfig, SetLoggerError> {

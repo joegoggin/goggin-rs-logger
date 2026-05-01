@@ -44,6 +44,10 @@ impl Logger {
     ///   (for example, `"debug"` or `"info"`).
     /// * `verbose` - When `true`, log output includes source locations and
     ///   decorative banners; when `false`, uses compact single-line format.
+    ///
+    /// # Returns
+    ///
+    /// This function does not return a value.
     pub fn setup_logging(log_level: &str, verbose: bool) {
         LOG_VERBOSE.store(verbose, Ordering::Relaxed);
 
@@ -55,6 +59,10 @@ impl Logger {
     ///
     /// Intended for early startup before application configuration is available.
     /// Defaults to `"info"` level with verbose output.
+    ///
+    /// # Returns
+    ///
+    /// This function does not return a value.
     pub fn setup_logging_from_env() {
         dotenvy::dotenv().ok();
 
@@ -85,6 +93,10 @@ impl Logger {
     /// # Arguments
     ///
     /// * `message` - The text to display.
+    ///
+    /// # Returns
+    ///
+    /// This function does not return a value.
     pub fn log_success(message: &str) {
         if !log::log_enabled!(Level::Info) {
             return;
@@ -105,6 +117,10 @@ impl Logger {
     /// # Arguments
     ///
     /// * `message` - The text to display.
+    ///
+    /// # Returns
+    ///
+    /// This function does not return a value.
     pub fn log_message(message: &str) {
         if !log::log_enabled!(Level::Info) {
             return;
