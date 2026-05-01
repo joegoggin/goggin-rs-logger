@@ -2,6 +2,9 @@
 name = "goggin-rs-logger"
 version = "0.1.0"
 edition = "2024"
+description = "Logging utilities extracted from GigLog for native Rust, Axum, and Leptos/WASM applications."
+license = "MIT"
+readme = "README.md"
 repository = "https://github.com/joegoggin/goggin-rs-logger"
 
 [features]
